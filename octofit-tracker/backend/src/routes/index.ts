@@ -1,0 +1,14 @@
+import { Router } from 'express';
+import { activitiesRouter } from './activities';
+import { leaderboardRouter } from './leaderboard';
+import { teamsRouter } from './teams';
+import { usersRouter } from './users';
+import { workoutsRouter } from './workouts';
+
+export const apiRouter = Router();
+
+apiRouter.use('/users', usersRouter);
+apiRouter.use('/teams', teamsRouter);
+apiRouter.use('/activities', activitiesRouter);
+apiRouter.use('/leaderboard', leaderboardRouter);
+apiRouter.use('/workouts', workoutsRouter);

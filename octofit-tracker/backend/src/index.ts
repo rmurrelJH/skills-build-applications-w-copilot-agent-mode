@@ -1,27 +1,35 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-import mongoose from 'mongoose';
+import { getApiBaseUrl } from './config/apiUrl';
+import { connectDatabase } from './config/database';
+import { apiRouter } from './routes';
 
 dotenv.config();
 
 const app = express();
 const port = Number(process.env.PORT ?? 8000);
-const mongoUri = process.env.MONGODB_URI ?? 'mongodb://127.0.0.1:27017/octofit_db';
+const apiBaseUrl = getApiBaseUrl();
 
 app.use(cors());
 app.use(express.json());
 
+app.use('/api', apiRouter);
+
 app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok' });
+  res.json({ status: 'ok', apiBaseUrl });
+});
+
+app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error(error);
+  res.status(500).json({ message: 'Internal server error' });
 });
 
 async function startServer(): Promise<void> {
   try {
-    await mongoose.connect(mongoUri);
+    await connectDatabase();
     app.listen(port, () => {
-      // Keep API tier on required port 8000 by default.
-      console.log(`Backend running on http://localhost:${port}`);
+      console.log(`Backend running on ${apiBaseUrl}`);
     });
   } catch (error) {
     console.error('Failed to start backend service', error);
