@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "Octofit Tracker backend API",
+  "keywords": [],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
